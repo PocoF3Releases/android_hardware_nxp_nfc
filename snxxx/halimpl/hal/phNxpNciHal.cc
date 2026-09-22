@@ -263,6 +263,7 @@ static void phNxpNciHal_initialize_debug_enabled_flag() {
 void* phNxpNciHal_client_thread(void* arg) {
   phNxpNciHal_Control_t* p_nxpncihal_ctrl = (phNxpNciHal_Control_t*)arg;
   phLibNfc_Message_t msg;
+  const intptr_t client_id = p_nxpncihal_ctrl->gDrvCfg.nClientId;
 
   NXPLOG_NCIHAL_D("thread started");
 
@@ -270,8 +271,7 @@ void* phNxpNciHal_client_thread(void* arg) {
 
   while (p_nxpncihal_ctrl->thread_running == 1) {
     /* Fetch next message from the NFC stack message queue */
-    if (phDal4Nfc_msgrcv(p_nxpncihal_ctrl->gDrvCfg.nClientId, &msg, 0, 0) ==
-        -1) {
+    if (phDal4Nfc_msgrcv(client_id, &msg, 0, 0) == -1) {
       NXPLOG_NCIHAL_E("NFC client received bad message");
       continue;
     }
